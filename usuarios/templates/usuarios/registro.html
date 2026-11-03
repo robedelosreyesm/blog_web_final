@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Registro — Blog Web{% endblock %}
+{% block contenido %}
+    <section class="panel panel-auth">
+        <div class="icono-panel">🚀</div>
+        <h1>Crear cuenta</h1>
+        <p class="subtitulo">Sumate a la comunidad y empezá a publicar.</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="boton" type="submit">Registrarme</button>
+        </form>
+        <p class="panel-pie">¿Ya tenés cuenta? <a href="{% url 'login' %}">Iniciá sesión</a></p>
+    </section>
+{% endblock %}

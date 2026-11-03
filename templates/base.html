@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#070d1f">
+    <title>{% block titulo %}Blog Web{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="marca" href="{% url 'listado_posts' %}">
+            <span class="marca-icono">✍️</span>
+            <span class="marca-texto">Blog <span>Web</span></span>
+        </a>
+
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Abrir menú">
+        <label for="nav-toggle" class="nav-burger">☰</label>
+
+        <nav>
+            <a href="{% url 'listado_posts' %}" class="{% if request.resolver_match.url_name == 'listado_posts' %}activo{% endif %}">Posts</a>
+            <a href="{% url 'buscar_posts' %}" class="{% if request.resolver_match.url_name == 'buscar_posts' %}activo{% endif %}">🔎 Buscar</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'crear_post' %}" class="nav-cta">＋ Nuevo post</a>
+                <a href="{% url 'perfil' %}" class="{% if request.resolver_match.url_name == 'perfil' %}activo{% endif %}">
+                    {% if user.perfil.avatar %}
+                        <img class="avatar-navbar" src="{{ user.perfil.avatar.url }}" alt="Avatar">
+                    {% else %}
+                        <span class="mini-avatar">{{ user.username|first|upper }}</span>
+                    {% endif %}
+                    Hola, {{ user.username }}
+                </a>
+                <form class="logout-form" action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="{% if request.resolver_match.url_name == 'login' %}activo{% endif %}">Iniciar sesión</a>
+                <a href="{% url 'registro' %}" class="nav-cta">Registrarme</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        {% if messages %}
+            <ul class="mensajes">
+                {% for message in messages %}
+                    <li class="mensaje {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block contenido %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p><strong>Blog Web</strong> · Proyecto final · Curso Data Analytics — CoderHouse</p>
+    </footer>
+</body>
+</html>

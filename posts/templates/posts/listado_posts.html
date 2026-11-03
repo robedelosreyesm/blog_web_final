@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}Posts — Blog Web{% endblock %}
+{% block contenido %}
+    <section class="hero">
+        <span class="hero-etiqueta">Ideas, historias y conocimiento</span>
+        <h1>Descubrí lo último en <span class="texto-grad">nuestro blog</span></h1>
+        <p>Un espacio para leer, escribir y compartir. Explorá las publicaciones de la comunidad o creá la tuya.</p>
+        <div class="hero-acciones">
+            {% if user.is_authenticated %}
+                <a class="boton" href="{% url 'crear_post' %}">＋ Escribir un post</a>
+            {% else %}
+                <a class="boton" href="{% url 'registro' %}">Unirme gratis</a>
+                <a class="boton secundario" href="{% url 'login' %}">Iniciar sesión</a>
+            {% endif %}
+            <a class="boton secundario" href="{% url 'buscar_posts' %}">🔎 Buscar</a>
+        </div>
+    </section>
+
+    <div class="encabezado-seccion">
+        <h2>Últimos posts</h2>
+        <span class="contador">{{ posts|length }} publicaciones</span>
+    </div>
+
+    {% if posts %}
+    <div class="grid-posts">
+    {% for post in posts %}
+        <article class="tarjeta-post">
+            <a class="tarjeta-media" href="{{ post.get_absolute_url }}">
+                {% if post.imagen %}
+                    <img src="{{ post.imagen.url }}" alt="Imagen de {{ post.titulo }}">
+                {% else %}
+                    <div class="placeholder-img"><span>{{ post.titulo|first|upper }}</span></div>
+                {% endif %}
+            </a>
+            <div class="tarjeta-cuerpo">
+                <p class="meta">
+                    <span class="autor-chip"><span class="mini-avatar">{{ post.autor.username|first|upper }}</span>{{ post.autor.username }}</span>
+                    <span>{{ post.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                </p>
+                <h2><a href="{{ post.get_absolute_url }}">{{ post.titulo }}</a></h2>
+                <p>{{ post.contenido|truncatewords:30 }}</p>
+                <a class="boton" href="{{ post.get_absolute_url }}">Leer más →</a>
+            </div>
+        </article>
+    {% endfor %}
+    </div>
+    {% else %}
+        <div class="vacio">
+            <span class="emoji">📭</span>
+            <p>Todavía no hay posts publicados. {% if user.is_authenticated %}<a href="{% url 'crear_post' %}">Creá el primero</a>.{% endif %}</p>
+        </div>
+    {% endif %}
+{% endblock %}

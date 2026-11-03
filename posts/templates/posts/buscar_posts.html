@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}Buscar posts — Blog Web{% endblock %}
+{% block contenido %}
+    <section class="buscador-hero">
+        <h1>Buscar <span class="texto-grad">posts</span></h1>
+        <p class="sub">Encontrá publicaciones por título o contenido.</p>
+        <form class="form-buscar" method="get">
+            <input type="text" name="q" value="{{ query }}" placeholder="Buscar por título o contenido...">
+            <button class="boton" type="submit">Buscar</button>
+        </form>
+    </section>
+
+    {% if query %}
+        <p class="meta resultado-info">Resultados para "{{ query }}": <strong>{{ resultados|length }}</strong></p>
+        <div class="lista-resultados">
+        {% for post in resultados %}
+            <article class="tarjeta-post">
+                <div class="tarjeta-cuerpo">
+                    <h2><a href="{{ post.get_absolute_url }}">{{ post.titulo }}</a></h2>
+                    <p class="meta">
+                        <span class="autor-chip"><span class="mini-avatar">{{ post.autor.username|first|upper }}</span>Por {{ post.autor.username }}</span>
+                    </p>
+                    <p>{{ post.contenido|truncatewords:20 }}</p>
+                </div>
+            </article>
+        {% empty %}
+            <div class="vacio">
+                <span class="emoji">🕵️</span>
+                <p>No se encontraron posts que coincidan con "{{ query }}".</p>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

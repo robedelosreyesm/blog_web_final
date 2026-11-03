@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}{{ post.titulo }} — Blog Web{% endblock %}
+{% block contenido %}
+    <article class="detalle-post">
+        <a class="volver" href="{% url 'listado_posts' %}">&larr; Volver al listado</a>
+
+        <h1>{{ post.titulo }}</h1>
+        <p class="meta">
+            <span class="autor-chip"><span class="mini-avatar">{{ post.autor.username|first|upper }}</span>{{ post.autor.username }}</span>
+            <span>📅 {{ post.fecha_creacion|date:"d/m/Y H:i" }}</span>
+        </p>
+
+        {% if post.imagen %}
+            <figure class="detalle-imagen">
+                <img src="{{ post.imagen.url }}" alt="Imagen de {{ post.titulo }}">
+            </figure>
+        {% else %}
+            <p class="sin-imagen">(Este post no tiene imagen cargada.)</p>
+        {% endif %}
+
+        <div class="contenido-post">{{ post.contenido|linebreaks }}</div>
+
+        {% if user.is_authenticated and user == post.autor %}
+            <div class="acciones-post">
+                <a class="boton" href="{% url 'editar_post' post.slug %}">✏️ Editar</a>
+                <a class="boton peligro" href="{% url 'eliminar_post' post.slug %}">🗑️ Eliminar</a>
+            </div>
+        {% endif %}
+    </article>
+{% endblock %}

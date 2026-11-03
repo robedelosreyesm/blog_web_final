@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block titulo %}Editar perfil — Blog Web{% endblock %}
+{% block contenido %}
+    <section class="panel">
+        <h1>Editar perfil</h1>
+        <p class="subtitulo">Actualizá tu bio y tu foto de perfil.</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="boton" type="submit">💾 Guardar cambios</button>
+        </form>
+    </section>
+{% endblock %}
